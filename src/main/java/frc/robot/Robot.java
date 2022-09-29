@@ -31,9 +31,6 @@ public class Robot extends TimedRobot {
   PIDController controller;
   Encoder encoder;
   double t;
-  int v;
-int t;
-intg;
 
   @Override
   public void robotInit() {
