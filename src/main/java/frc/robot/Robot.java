@@ -33,6 +33,7 @@ public class Robot extends TimedRobot {
   double t;
   int v;
 int t;
+intg;
 
   @Override
   public void robotInit() {
