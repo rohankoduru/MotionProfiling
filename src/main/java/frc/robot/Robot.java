@@ -26,7 +26,10 @@ public class Robot extends TimedRobot {
   TrapezoidProfile profile;
   TrapezoidProfile.State profileOutput;
   WPI_TalonFX falcon;
-  double velocity;
+  WPI_TalonFX falcon2;
+  WPI_TalonFX falcon3;
+  WPI_TalonFX falcon4;
+  double output;
 
   PIDController controller;
   Encoder encoder;
@@ -35,6 +38,9 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     falcon = new WPI_TalonFX(0);
+    falcon2 = new WPI_TalonFX(1);
+    falcon3 = new WPI_TalonFX(1);
+    falcon4 = new WPI_TalonFX(1);
     start = new TrapezoidProfile.State(0, 0);
     end = new TrapezoidProfile.State(5.0, 0);
     constraints = new TrapezoidProfile.Constraints(2, 0.2);
@@ -68,12 +74,17 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
-    profileOutput = profile.calculate(0.4);
     encoder = new Encoder(Constants.ENCODER_IDS[0], Constants.ENCODER_IDS[1]);
     TrapezoidProfile.State setpoint = profile.calculate(t);
     controller.setSetpoint(setpoint.velocity);
-    velocity = controller.calculate(encoder.getRate());
-    falcon.set(ControlMode.Velocity, velocity);
+    output = controller.calculate(falcon.getSelectedSensorPosition() / 166);
+    falcon.set(ControlMode.PercentOutput, output);
+    output = controller.calculate(falcon2.getSelectedSensorPosition() / 166);
+    falcon2.set(ControlMode.PercentOutput, output);
+    output = controller.calculate(falcon3.getSelectedSensorPosition() / 166);
+    falcon3.set(ControlMode.PercentOutput, output);
+    output = controller.calculate(falcon4.getSelectedSensorPosition() / 166);
+    falcon4.set(ControlMode.PercentOutput, output);
     t += 0.02;
 
   }
