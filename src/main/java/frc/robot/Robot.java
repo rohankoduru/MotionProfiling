@@ -11,6 +11,8 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+
 
 
 public class Robot extends TimedRobot {
@@ -19,16 +21,18 @@ public class Robot extends TimedRobot {
   private String m_autoSelected;
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
 
-
-  DoubleSolenoid one;
+  Systems intake;
   XboxController controller;
-
+  DoubleSolenoid one;
+  Systems system;
 
 
   @Override
   public void robotInit() {
-    one = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 0, 1);
+    intake = new Systems();
     controller = new XboxController(0);
+    one = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 0, 1);
+    system = new Systems();
   }
 
 
@@ -56,15 +60,17 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
-    if (controller.getBackButtonPressed()) {
-      one.set(DoubleSolenoid.Value.kForward);
+    if (controller.getAButtonPressed())  {
+      if (one.isRevSolenoidDisabled() && one.isFwdSolenoidDisabled()) {
+        system.intakeBackwardPress();
+      }
     }
-    if (controller.getBackButtonReleased()) {
-      one.set(DoubleSolenoid.Value.kOff);
+    if (controller.getBButtonPressed())  {
+      if (one.isFwdSolenoidDisabled() && one.isRevSolenoidDisabled()) {
+        system.intakeForwardPress();
+      }
     }
   }
-
-
 
   @Override
   public void disabledInit() {}

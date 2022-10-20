@@ -13,61 +13,21 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 
-public class Systems extends SubsystemBase {
+public class Systems extends Robot {
     private static final String kDefaultAuto = "Default";
     private static final String kCustomAuto = "My Auto";
     private String m_autoSelected;
     private final SendableChooser<String> m_chooser = new SendableChooser<>();
 
-
-    DoubleSolenoid one;
-    XboxController controller;
-
-
-
-    public void robotInit() {
-        one = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 0, 1);
-        controller = new XboxController(0);
+    public void intakeForwardPress() {
+        one.set(DoubleSolenoid.Value.kForward);
     }
 
-
-    public void robotPeriodic() {}
-
-
-    public void autonomousInit() {
-    }
-
-
-    public void autonomousPeriodic() {
-
-    }
-
-
-    public void teleopInit() {
-
+    public void intakeBackwardPress() {
+        one.set(DoubleSolenoid.Value.kReverse);
     }
 
 
 
-    public void teleopPeriodic() {
-        if (controller.getBackButtonPressed()) {
-            one.set(DoubleSolenoid.Value.kForward);
-        }
-        if (controller.getBackButtonReleased()) {
-            one.set(DoubleSolenoid.Value.kOff);
-        }
-    }
 
-
-
-    public void disabledInit() {}
-
-
-    public void disabledPeriodic() {}
-
-
-    public void testInit() {}
-
-
-    public void testPeriodic() {}
 }
