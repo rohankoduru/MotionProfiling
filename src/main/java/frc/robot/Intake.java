@@ -13,11 +13,36 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 
-public class Systems extends Robot {
-    private static final String kDefaultAuto = "Default";
-    private static final String kCustomAuto = "My Auto";
-    private String m_autoSelected;
-    private final SendableChooser<String> m_chooser = new SendableChooser<>();
+public class Intake extends SubsystemBase {
+    private static Intake instance;
+    public static Intake getInstance() {
+        if (instance == null) {
+            instance = new Intake();
+        }
+        return instance;
+    }
+
+    WPI_TalonFX falcon;
+    XboxController controller;
+
+
+    private DoubleSolenoid one;
+
+    public void initHardware() {
+        one = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 0, 1);
+        falcon = new WPI_TalonFX(0);
+        controller = new XboxController(0);
+    }
+
+    public void FalconSpeed() {
+        double joystickValue = controller.getLeftY();
+        if (joystickValue < 0){
+            falcon.set(0);
+        }
+        else {
+            falcon.set(joystickValue);
+        }
+    }
 
     public void intakeForwardPress() {
         one.set(DoubleSolenoid.Value.kForward);
